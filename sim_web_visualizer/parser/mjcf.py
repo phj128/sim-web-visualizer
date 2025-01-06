@@ -17,7 +17,7 @@ from sim_web_visualizer.parser.mesh_parser import rgb_to_hex, AssetResource
 from sim_web_visualizer.utils.rotation_utils import compute_vector_rotation
 
 
-def load_mjcf_with_dmc(filename: str, collapse_fixed_joints: bool) -> AssetResource:
+def load_mjcf_with_dmc(filename: str, collapse_fixed_joints: bool, is_xmlstr=False) -> AssetResource:
     from dm_control import mjcf
 
     # The mjcf file by IsaacGym does not follow the convention of mujoco mjcf precisely
@@ -38,23 +38,26 @@ def load_mjcf_with_dmc(filename: str, collapse_fixed_joints: bool) -> AssetResou
         pose[:3, 3] = pos
         return pose
 
-    try:
-        model = mjcf.from_path(filename)
-    except KeyError:
-        isaac_mjcf = True
-        tree = etree.parse(filename)
-        root = tree.getroot()
-        invalid_includes = root.findall("*/include")
-        for include in invalid_includes:
-            parent = include.getparent()
-            file: str = include.get("file")
-            file_path = file_root / file
-            child_xml = etree.parse(str(file_path)).getroot().getchildren()
-            parent.remove(include)
-            parent.extend(child_xml)
+    if is_xmlstr:
+        model = mjcf.from_xml_string(filename)
+    else:
+        try:
+            model = mjcf.from_path(filename)
+        except KeyError:
+            isaac_mjcf = True
+            tree = etree.parse(filename)
+            root = tree.getroot()
+            invalid_includes = root.findall("*/include")
+            for include in invalid_includes:
+                parent = include.getparent()
+                file: str = include.get("file")
+                file_path = file_root / file
+                child_xml = etree.parse(str(file_path)).getroot().getchildren()
+                parent.remove(include)
+                parent.extend(child_xml)
 
-        xml_string = etree.tostring(tree)
-        model = mjcf.from_xml_string(xml_string, model_dir=str(file_root))
+            xml_string = etree.tostring(tree)
+            model = mjcf.from_xml_string(xml_string, model_dir=str(file_root))
 
     # Dry run data for faster loading
     offline_data_dict = {}

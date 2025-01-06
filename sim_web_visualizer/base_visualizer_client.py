@@ -58,6 +58,8 @@ class MeshCatVisualizerBase:
             )
         elif filename.endswith(".xml"):
             resource = load_mjcf_with_dmc(filename, collapse_fixed_joints)
+        elif isinstance(filename, str):
+            resource = load_mjcf_with_dmc(filename, collapse_fixed_joints, is_xmlstr=True)
         else:
             raise ValueError(f"Invalid file type: {filename}")
 
