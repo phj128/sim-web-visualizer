@@ -73,6 +73,12 @@ Web Visualizer on [ManiSkill2](https://github.com/haosulab/ManiSkill2).
 
 ![sapien](doc/sapien_side_by_side.gif)
 
+### Mujoco Web Visualizer
+Run the example.
+```
+python example/mujoco/run_mujoco_viz.py
+```
+
 ### URDF Web Visualizer
 
 Check the [URDF Example](example/visualize_urdf/README.md) for information to visualize a static URDF file on Web
