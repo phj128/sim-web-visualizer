@@ -31,19 +31,19 @@ inside [jupyter notebook](example/isaacgym/train_isaacgym_remote_server.ipynb) o
 
 ## Installation
 
-From pip:
+From pip (original install, without mujoco web visualizer):
 
 ```shell
 pip install sim_web_visualizer
 ```
 
-From source:
+From source (with mujoco web visualizer):
 
 **Note:** this visualizer does not have a Python version requirement but
 IsaacGym requires Python 3.6, 3.7, or 3.8
 
 ```shell
-git clone https://github.com/NVlabs/sim-web-visualizer
+git clone https://github.com/phj128/sim-web-visualizer
 cd sim-web-visualizer && git submodule update --init --recursive
 pip install -e .
 
